@@ -45,9 +45,6 @@ export function canMoveDown(blocks: number[], stickBlocks: number[]) {
     for (let i = stickBlocks.length - 1; i > 1; i--) {
         const stickBlock = stickBlocks[i];
         const block = blocks[i - 1];
-        // if (i===8) {
-        //   debugger;
-        // }
         if (stickBlock & block) {
             return false;
         }
@@ -62,12 +59,16 @@ export function moveLeft(blocks: number[]) {
 
 export function canMoveLeft(blocks: number[], stickBlocks: number[]) {
     for (let i = 0; i < blocks.length; i++) {
+        const stickBlock = stickBlocks[i];
         const b = blocks[i];
         // already reach left boundary
         if (b & 0b1000000000) {
             return false;
         }
         // left has stick block
+        if ((b << 1) & stickBlock) {
+            return false;
+        }
     }
     return true;
 }
@@ -79,8 +80,12 @@ export function moveRight(blocks: number[]) {
 
 export function canMoveRight(blocks: number[], stickBlocks: number[]) {
     for (let i = 0; i < blocks.length; i++) {
+        const stickBlock = stickBlocks[i];
         const b = blocks[i];
         if (b & 0b0000000001) {
+            return false;
+        }
+        if ((b >> 1) & stickBlock) {
             return false;
         }
     }
@@ -93,5 +98,13 @@ export function mergeBlocks(blocks: number[], stickBlock: number[]) {
         const b = blocks[i];
         res[i] = b | stickBlock[i];
     }
+    return res;
+}
+
+export function cleanRow(stickBlock: number[]) {
+    let res: number[] = [...stickBlock];
+    res = res.filter((e) => e !== 0b1111111111);
+    const len = stickBlock.length - res.length;
+    res.unshift(...Array(len).fill(0b0000000000));
     return res;
 }

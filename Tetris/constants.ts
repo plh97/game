@@ -9,3 +9,4 @@ export const DOWN = "DOWN";
 export const ADD_BLOCK = "ADD_BLOCK";
 export const MOVE_LEFT = "MOVE_LEFT";
 export const MOVE_RIGHT = "MOVE_RIGHT";
+export const CLEAN_ROW = "CLEAN_ROW";

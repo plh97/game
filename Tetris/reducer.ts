@@ -1,5 +1,6 @@
 import {
     ADD_BLOCK,
+    CLEAN_ROW,
     DOWN,
     EMPTY_BLOCK,
     MOVE_LEFT,
@@ -34,6 +35,11 @@ export const reducer = (state, action) => {
                 return moveRight(state);
             }
             return state;
+        // case CLEAN_ROW:
+        //     if (canMoveRight(state, action.stickBlock)) {
+        //         return moveRight(state);
+        //     }
+        //     return state;
         default:
             return state;
     }

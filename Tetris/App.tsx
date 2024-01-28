@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useInterval } from "usehooks-ts";
 import Block from "./components/Block";
 import { EMPTY_BLOCK } from "./constants";
-import { canMoveDown, hasBlock, mergeBlocks } from "./utils";
+import { canMoveDown, cleanRow, hasBlock, mergeBlocks } from "./utils";
 import { useBindEvent } from "./hooks";
 import { reducer } from "./reducer";
 
@@ -29,6 +29,9 @@ function App() {
             setStickBlock(mergeBlocks(moveBlock, stickBlock));
         }
     }, [moveBlock]);
+    useEffect(() => {
+        setStickBlock(cleanRow(stickBlock));
+    }, [stickBlock]);
     useBindEvent({
         moveLeft: () => {
             dispatch({ type: "MOVE_LEFT", stickBlock });
@@ -37,17 +40,16 @@ function App() {
             dispatch({ type: "MOVE_RIGHT", stickBlock });
         },
         moveDown: () => {
-            console.log(stickBlock);
             dispatch({ type: "DOWN", stickBlock });
         },
         rotate: () => {},
         moveDownImmediate: () => {},
     });
     return (
-        <>
+        <div className="page">
             <Block data={moveBlock} />
             <Block data={stickBlock} />
-        </>
+        </div>
     );
 }
 
