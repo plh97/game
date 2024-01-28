@@ -1,22 +1,4 @@
-(CanvasRenderingContext2D.prototype as any).roundRect = function (
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    r: number
-) {
-    var min_size = Math.min(w, h);
-    if (r > min_size / 2) r = min_size / 2;
-    // 开始绘制
-    this.beginPath();
-    this.moveTo(x + r, y);
-    this.arcTo(x + w, y, x + w, y + h, r);
-    this.arcTo(x + w, y + h, x, y + h, r);
-    this.arcTo(x, y + h, x, y, r);
-    this.arcTo(x, y, x + w, y, r);
-    this.closePath();
-    return this;
-};
+import { COLOR, NUM_ENUM, NUM_TYPE } from "./interface";
 
 const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
@@ -48,7 +30,7 @@ function roundRect(
     radius1 = 5,
     fill: boolean = true,
     stroke: boolean = false
-): void {
+) {
     const radius = { tl: radius1, tr: radius1, br: radius1, bl: radius1 };
     ctx.beginPath();
     ctx.moveTo(x + radius.tl, y);
@@ -76,30 +58,40 @@ function roundRect(
     }
 }
 
-type NUM = 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048;
-
-// enum NUM {
-//     TWO = 2,
-//     FOUR = 4,
-//     EIGHT = 8,
-//     SIXTEEN = 16,
-//     THIRTY_TWO = 32,
-//     SIXTY_FOUR = 64,
-//     ONE_HUNDRED_TWENTY_EIGHT = 128,
-//     TWO_HUNDRED_FIFTY_SIX = 256,
-//     FIVE_HUNDRED_TWELVE = 512,
-//     ONE_THOUSAND_AND_TWENTY_FOURTH = 1024,
-//     TWO_THOUSAND_AND_FORTY_EIGHTH = 2048,
-// }
+class Cell {
+    x: number;
+    y: number;
+    size: number;
+    gutter: number;
+    num: NUM_ENUM;
+    color: string;
+    constructor(x: number, y: number, color: string = "#eee4da59") {
+        this.x = x;
+        this.y = y;
+        this.gutter = 7.5;
+        this.size = 100;
+        this.color = color;
+        this.num = Math.random() > 0.5 ? 2 : 4;
+    }
+    draw() {
+        roundRect(
+            this.x * this.size + this.gutter,
+            this.y * this.size + this.gutter,
+            this.size - this.gutter * 2,
+            this.size - this.gutter * 2,
+            this.color
+        );
+    }
+}
 
 class Block {
     x: number;
     y: number;
     size: number;
     gutter: number;
-    num: NUM;
+    num: NUM_ENUM;
     color: string;
-    constant: Record<NUM, string>;
+    constant: Record<NUM_TYPE, string>;
     constructor(x: number, y: number, color: string = "#eee4da59") {
         this.x = x;
         this.y = y;
@@ -123,29 +115,20 @@ class Block {
     }
     draw() {
         roundRect(
-            this.x * this.size + this.gutter,
             this.y * this.size + this.gutter,
-            this.size - this.gutter * 2,
-            this.size - this.gutter * 2,
-            this.color
-        );
-    }
-    drawText() {
-        roundRect(
             this.x * this.size + this.gutter,
-            this.y * this.size + this.gutter,
             this.size - this.gutter * 2,
             this.size - this.gutter * 2,
             this.constant[this.num]
         );
         ctx.beginPath();
-        ctx.fillStyle = "#776e65";
+        ctx.fillStyle = COLOR.TEXT_1;
         ctx.font =
             'bold 48px "Clear Sans", "Helvetica Neue", Arial, sans-serif';
         ctx.fillText(
             this.num.toString(),
-            (this.x + 0.5) * this.size - 12,
-            (this.y + 0.5) * this.size + 15
+            (this.y + 0.5) * this.size - 15,
+            (this.x + 0.5) * this.size + 12
         );
         ctx.stroke();
     }
@@ -172,9 +155,6 @@ const app = {
         this.drawCell();
         this.drawBlock();
         this.bindEvent();
-        this.bindEvent();
-        this.bindEvent();
-        this.bindEvent();
     },
     findBlockByRandom() {
         const containers: { i: number; j: number }[] = [];
@@ -195,12 +175,12 @@ const app = {
         this.data.map[i][j] = new Block(i, j);
     },
     drawBackground() {
-        roundRect(0, 0, this.data.width, this.data.width, "#bbada0");
+        roundRect(0, 0, this.data.width, this.data.width, COLOR.BACKGROUND);
     },
     drawCell() {
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-                const cell = new Block(i, j);
+                const cell = new Cell(i, j);
                 cell.draw();
             }
         }
@@ -208,26 +188,46 @@ const app = {
     drawBlock() {
         this.data.map.forEach((col) => {
             col.forEach((block) => {
-                block?.drawText();
+                block?.draw();
             });
         });
     },
+    moveColumn(column: number) {
+        console.log(column);
+    },
+    moveRow(row: number) {
+        console.log(row);
+        if (row < 0 || row > 3) return;
+        const rows = this.data.map[row];
+        console.log(rows)
+        // 1 block
+        // 2 blocks
+            // x2x2
+            // x4x2
+        // 3 blocks
+            // x222
+            // 2222
+        // 4 blocks
+            // 2222
+            // 2424
+            // 2424
+        },
     bindEvent() {
-        document.addEventListener(
-            "keyup",
-            (event) => {
-                if (event.key === "ArrowLeft") {
-                    console.log(event);
-                } else if (event.key === "ArrowRight") {
-                    console.log(event);
-                } else if (event.key === "ArrowUp") {
-                    console.log(event);
-                } else if (event.key === "ArrowDown") {
-                    console.log(event);
-                }
-            },
-            false
-        );
+        document.addEventListener("keyup", (event) => {
+            if (event.key === "ArrowLeft") {
+                this.moveRow(0);
+                this.moveRow(1);
+                this.moveRow(2);
+                this.moveRow(3);
+                // console.log(event);
+            } else if (event.key === "ArrowRight") {
+                console.log(event);
+            } else if (event.key === "ArrowUp") {
+                console.log(event);
+            } else if (event.key === "ArrowDown") {
+                console.log(event);
+            }
+        });
     },
 };
 
