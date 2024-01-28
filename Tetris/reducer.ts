@@ -1,4 +1,10 @@
-import { EMPTY_BLOCK } from "./constants";
+import {
+    ADD_BLOCK,
+    DOWN,
+    EMPTY_BLOCK,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+} from "./constants";
 import {
     addBlock,
     canMoveDown,
@@ -11,20 +17,20 @@ import {
 
 export const reducer = (state, action) => {
     switch (action.type) {
-        case "DOWN":
+        case DOWN:
             if (canMoveDown(state, action.stickBlock)) {
                 return moveDown(state);
             }
             return addBlock(EMPTY_BLOCK);
-        case "ADD_BLOCK":
+        case ADD_BLOCK:
             return addBlock(EMPTY_BLOCK);
-        case "MOVE_LEFT":
+        case MOVE_LEFT:
             if (canMoveLeft(state, action.stickBlock)) {
                 return moveLeft(state);
             }
             return state;
-        case "MOVE_RIGHT":
-            if (canMoveRight(state)) {
+        case MOVE_RIGHT:
+            if (canMoveRight(state, action.stickBlock)) {
                 return moveRight(state);
             }
             return state;

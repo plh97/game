@@ -12,8 +12,8 @@ export function binaryFmt(binaryNum: number, len: number = 10) {
     return data;
 }
 export function hasBlock(blocks: number[]) {
-    for (let index = 0; index < blocks.length; index++) {
-        const b = blocks[index];
+    for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
         if (b > 0) {
             return true;
         }
@@ -61,8 +61,8 @@ export function moveLeft(blocks: number[]) {
 }
 
 export function canMoveLeft(blocks: number[], stickBlocks: number[]) {
-    for (let index = 0; index < blocks.length; index++) {
-        const b = blocks[index];
+    for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
         // already reach left boundary
         if (b & 0b1000000000) {
             return false;
@@ -78,8 +78,8 @@ export function moveRight(blocks: number[]) {
 }
 
 export function canMoveRight(blocks: number[], stickBlocks: number[]) {
-    for (let index = 0; index < blocks.length; index++) {
-        const b = blocks[index];
+    for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
         if (b & 0b0000000001) {
             return false;
         }
@@ -89,9 +89,9 @@ export function canMoveRight(blocks: number[], stickBlocks: number[]) {
 
 export function mergeBlocks(blocks: number[], stickBlock: number[]) {
     const res: number[] = [];
-    for (let index = 0; index < blocks.length; index++) {
-        const b = blocks[index];
-        res[index] = b | stickBlock[index];
+    for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
+        res[i] = b | stickBlock[i];
     }
     return res;
 }

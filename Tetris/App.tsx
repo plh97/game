@@ -31,10 +31,10 @@ function App() {
     }, [moveBlock]);
     useBindEvent({
         moveLeft: () => {
-            dispatch({ type: "MOVE_LEFT" });
+            dispatch({ type: "MOVE_LEFT", stickBlock });
         },
         moveRight: () => {
-            dispatch({ type: "MOVE_RIGHT" });
+            dispatch({ type: "MOVE_RIGHT", stickBlock });
         },
         moveDown: () => {
             console.log(stickBlock);
