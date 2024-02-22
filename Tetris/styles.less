@@ -1,16 +1,19 @@
+@SIZE: 40;
+
 .page {
     display: flex;
     align-items: center;
     justify-content: center;
     .container {
-        // width: 200px;
-        // height: 400px;
         position: relative;
+        &.bg .row {
+            width: 10 * @SIZE * 1px;
+        }
         .row {
             .block-container {
                 box-sizing: border-box;
-                width: 20px;
-                height: 20px;
+                width: @SIZE * 1px;
+                height: @SIZE * 1px;
                 position: absolute;
                 display: inline-block;
                 border: 1px solid #858585;

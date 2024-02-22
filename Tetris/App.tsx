@@ -1,54 +1,69 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useInterval } from "usehooks-ts";
 import Block from "./components/Block";
-import { EMPTY_BLOCK } from "./constants";
-import { canMoveDown, cleanRow, hasBlock, mergeBlocks } from "./utils";
+import {
+    ADD_BLOCK,
+    CLEAN_ROW,
+    DOWN,
+    EMPTY_BLOCK,
+    INITIAL_SCREEN,
+    MERGE_BLOCK,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    ROTATE,
+} from "./constants";
+import { canMoveDown, hasBlock, moveLatest } from "./utils";
 import { useBindEvent } from "./hooks";
-import { reducer } from "./reducer";
+import { moveBlockReducer } from "./reducers/moveBlock";
+import { bgBlockReducer } from "./reducers/bgBlock";
 
 import "./styles.less";
 
 function App() {
     const [speed, setSpeed] = useState(1000);
-    const [moveBlock, dispatch] = useReducer(reducer, [...EMPTY_BLOCK]);
-    const [stickBlock, setStickBlock] = useState([
-        0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000,
-        0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000,
-        0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000,
-        0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000, 0b0000000000,
+    const [moveBlock, moveBlockDispatch] = useReducer(moveBlockReducer, [
+        ...EMPTY_BLOCK,
+    ]);
+    const [bgBlock, bgBlockDispatch] = useReducer(bgBlockReducer, [
+        ...EMPTY_BLOCK,
     ]);
     useInterval(() => {
+        if (!canMoveDown(moveBlock, bgBlock)) {
+            bgBlockDispatch({ type: MERGE_BLOCK, moveBlock });
+        }
         if (!hasBlock(moveBlock)) {
-            dispatch({ type: "ADD_BLOCK", stickBlock });
+            moveBlockDispatch({ type: ADD_BLOCK, bgBlock });
         } else {
-            dispatch({ type: "DOWN", stickBlock });
+            moveBlockDispatch({ type: DOWN, bgBlock });
         }
+        bgBlockDispatch({ type: CLEAN_ROW });
     }, speed);
-    useEffect(() => {
-        if (!canMoveDown(moveBlock, stickBlock)) {
-            setStickBlock(mergeBlocks(moveBlock, stickBlock));
-        }
-    }, [moveBlock]);
-    useEffect(() => {
-        setStickBlock(cleanRow(stickBlock));
-    }, [stickBlock]);
     useBindEvent({
         moveLeft: () => {
-            dispatch({ type: "MOVE_LEFT", stickBlock });
+            moveBlockDispatch({ type: MOVE_LEFT, bgBlock });
         },
         moveRight: () => {
-            dispatch({ type: "MOVE_RIGHT", stickBlock });
+            moveBlockDispatch({ type: MOVE_RIGHT, bgBlock });
         },
         moveDown: () => {
-            dispatch({ type: "DOWN", stickBlock });
+            moveBlockDispatch({ type: DOWN, bgBlock });
+            if (!canMoveDown(moveBlock, bgBlock)) {
+                bgBlockDispatch({ type: MERGE_BLOCK, moveBlock });
+            }
         },
-        rotate: () => {},
-        moveDownImmediate: () => {},
+        moveDownImmediate: () => {
+            const newMoveBlock = moveLatest(moveBlock, bgBlock);
+            moveBlockDispatch({ type: INITIAL_SCREEN });
+            bgBlockDispatch({ type: MERGE_BLOCK, moveBlock: newMoveBlock });
+        },
+        rotate: () => {
+            moveBlockDispatch({ type: ROTATE });
+        },
     });
     return (
         <div className="page">
             <Block data={moveBlock} />
-            <Block data={stickBlock} />
+            <Block className="bg" data={bgBlock} />
         </div>
     );
 }

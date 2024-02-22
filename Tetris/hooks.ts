@@ -1,5 +1,14 @@
-import { useEffect } from "react";
 import { useEventListener } from "usehooks-ts";
+
+interface IProps {
+    moveLeft: () => void;
+    moveRight: () => void;
+    moveDown: () => void;
+    moveDownImmediate: () => void;
+    rotate: () => void;
+}
+
+const event = "keydown";
 
 export function useBindEvent({
     moveLeft,
@@ -7,8 +16,7 @@ export function useBindEvent({
     moveDown,
     moveDownImmediate,
     rotate,
-}) {
-    const event = "keydown";
+}: IProps) {
     function cb(e: KeyboardEvent) {
         if (e.code === "ArrowLeft") {
             moveLeft();
