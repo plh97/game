@@ -1,62 +1,107 @@
-# Dev Step
+# Online Tetris link
 
-1. how to express?
-  2D Array like this
-    ```js
-    [
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000,
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000,
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000,
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000, 
-        0b0000000000,
-    ]
-    ```
+[Tetris](https://game.plhh.xyz/tetris/)
 
-2. how to move
-  move left:  `0b0000000000 >> 1`
-  move right: `0b0000000000 << 1`
+## how to describe?
+  
+2D Array like this
 
-3. how to remove
+```js
+[
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000,
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000,
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000,
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000, 
+    0b0000000000,
+]
+```
+
+## Move left
+
+`0b0000000000 >> 1`
+
+## Move right
+
+`0b0000000000 << 1`
+
+## Move down
+
+```ts
+export function moveDown(blocks: number[]) {
+    const newArr = [...blocks];
+    newArr.unshift(0b0000000000);
+    newArr.pop();
+    return newArr;
+}
+```
+
+## Remove
   `blocks = EMPTY_BLOCK`
 
-4. how to rotate
+## Rotate
   ```ts
-  export function rotateBlock(blocks: number[]) {
-      const len = blocks.length;
-      const matrix: number[][] = blocks.map((block) =>
-          binaryFmt(block).map(Number)
-      );
-      const temp: number[][] = [];
-      for (var i = 0; i < len; i++) {
-          for (var j = 0; j < len; j++) {
-              var k = len - 1 - j;
-              if (!temp[k]) {
-                  temp[k] = [];
-              }
-              temp[k][i] = matrix[i][j];
-          }
-      }
-      return temp.map((row) => string2Binary(row.join("")));
-  }
+export function rotateMatrix(matrix: number[][]) {
+    const len = matrix.length;
+    const temp: number[][] = [];
+    for (var i = 0; i < len; i++) {
+        for (var j = 0; j < len; j++) {
+            var k = len - 1 - j;
+            if (!temp[k]) {
+                temp[k] = [];
+            }
+            temp[k][i] = matrix[i][j];
+        }
+    }
+    return temp;
+}
+
+export function rotateBlock(blocks: number[]) {
+    // 1. from '0000110000' to [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    const matrix = blocks.map((block) => binaryFmt(block).map(Number));
+    let temp: number[][] = [];
+    // 2. get minimal square matrix
+    const { top, left, bottom, right } = getBoundary(matrix);
+    // 3. rotate this matrix
+    const len = Math.max(bottom - top, right - left) + 1;
+    const newMatrix = matrix
+        .filter((_, i) => {
+            return i >= top && i < len + top;
+        })
+        .map((row) => {
+            return row.filter((_, i) => {
+                return i >= left && i < len + left;
+            });
+        });
+    temp = rotateMatrix(newMatrix);
+    const x = top;
+    const y = left;
+    for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len; j++) {
+            matrix[i + x][j + y] = temp[i][j];
+        }
+    }
+    // 4. assign back
+    return matrix.map((row) => string2Binary(row.join("")));
+}
   ```
 
-5. how to add block
-  ```js
+## Add block
+  ```ts
   function addBlock(blocks: number[]) {
     const newArr = [...EMPTY_BLOCK];
     newArr[0] = 0b0000110000;
