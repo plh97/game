@@ -56,7 +56,7 @@ function App() {
             bgBlockDispatch({ type: MERGE_BLOCK, moveBlock: newMoveBlock });
         },
         rotate: () => {
-            moveBlockDispatch({ type: ROTATE });
+            moveBlockDispatch({ type: ROTATE, bgBlock });
         },
     });
     return (

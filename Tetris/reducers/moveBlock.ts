@@ -12,6 +12,7 @@ import {
     canMoveDown,
     canMoveLeft,
     canMoveRight,
+    canRotateBlock,
     moveDown,
     moveLeft,
     moveRight,
@@ -31,7 +32,10 @@ export const moveBlockReducer = (state: number[], action: Action) => {
         case INITIAL_SCREEN:
             return addRandomBlock(EMPTY_BLOCK);
         case ROTATE:
-            return rotateBlock(state);
+            if (canRotateBlock(state, action.bgBlock)) {
+                return rotateBlock(state);
+            }
+            return state;
         case DOWN:
             if (canMoveDown(state, action?.bgBlock)) {
                 return moveDown(state);

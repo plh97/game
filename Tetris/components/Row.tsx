@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { binaryFmt } from "../utils";
-import { SIZE } from "../constants";
+import { BLOCK_SIZE } from "../constants";
 
 interface IProps {
     data: number;
@@ -21,8 +21,8 @@ function Row({ data, y }: IProps) {
                         +col ? "block" : ""
                     )}
                     style={{
-                        top: y * SIZE,
-                        left: x * SIZE,
+                        top: y * BLOCK_SIZE,
+                        left: x * BLOCK_SIZE,
                     }}
                 />
             ))}

@@ -1,8 +1,9 @@
+import { COL_LEN, ROW_LEN } from "../constants";
 import { getBoundary } from "./getBoundary";
 
 export * from "./addBlock";
 
-export function binaryFmt(binaryNum: number, len: number = 10) {
+export function binaryFmt(binaryNum: number, len: number = ROW_LEN) {
     const data = binaryNum.toString(2).split("");
     if (data.length < len) {
         const times = len - data.length;
@@ -24,7 +25,7 @@ export function hasBlock(blocks: number[]) {
 
 export function moveDown(blocks: number[]) {
     const newArr = [...blocks];
-    newArr.unshift(0b0000000000);
+    newArr.unshift(0);
     newArr.pop();
     return newArr;
 }
@@ -137,6 +138,42 @@ export function rotateMatrix(matrix: number[][]) {
     return temp;
 }
 
+export function canRotateBlock(blocks: number[], bgBlocks?: number[]) {
+    if (!bgBlocks) {
+        return false;
+    }
+    // 1. from '0000110000' to [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    const matrix = blocks.map((block) => binaryFmt(block).map(Number));
+    const bgMatrix = bgBlocks.map((block) => binaryFmt(block).map(Number));
+    let temp: number[][] = [];
+    // 2. get minimal square matrix
+    const { top, left, bottom, right } = getBoundary(matrix);
+    // 3. rotate this matrix
+    const len = Math.max(bottom - top, right - left) + 1;
+    const newMatrix = matrix
+        .filter((_, i) => {
+            return i >= top && i < len + top;
+        })
+        .map((row) => {
+            return row.filter((_, i) => {
+                return i >= left && i < len + left;
+            });
+        });
+    temp = rotateMatrix(newMatrix);
+    const x = top;
+    const y = left;
+    if (top + len > COL_LEN || left + len > ROW_LEN) {
+        return false;
+    }
+    for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len; j++) {
+            if (bgMatrix[i + x][j + y] === 1 && temp[i][j] === 1) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 export function rotateBlock(blocks: number[]) {
     // 1. from '0000110000' to [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     const matrix = blocks.map((block) => binaryFmt(block).map(Number));
