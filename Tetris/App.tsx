@@ -36,7 +36,6 @@ function App() {
         } else {
             moveBlockDispatch({ type: DOWN, bgBlock });
         }
-        bgBlockDispatch({ type: CLEAN_ROW });
     }, speed);
     useBindEvent({
         moveLeft: () => {

@@ -1,3 +1,5 @@
+import { getBoundary } from "./getBoundary";
+
 export * from "./addBlock";
 
 export function binaryFmt(binaryNum: number, len: number = 10) {
@@ -120,11 +122,8 @@ function string2Binary(str: string) {
     return +("0b" + str);
 }
 
-export function rotateBlock(blocks: number[]) {
-    const len = blocks.length;
-    const matrix: number[][] = blocks.map((block) =>
-        binaryFmt(block).map(Number)
-    );
+export function rotateMatrix(matrix: number[][]) {
+    const len = matrix.length;
     const temp: number[][] = [];
     for (var i = 0; i < len; i++) {
         for (var j = 0; j < len; j++) {
@@ -135,5 +134,34 @@ export function rotateBlock(blocks: number[]) {
             temp[k][i] = matrix[i][j];
         }
     }
-    return temp.map((row) => string2Binary(row.join("")));
+    return temp;
+}
+
+export function rotateBlock(blocks: number[]) {
+    // 1. from '0000110000' to [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    const matrix = blocks.map((block) => binaryFmt(block).map(Number));
+    let temp: number[][] = [];
+    // 2. get minimal square matrix
+    const { top, left, bottom, right } = getBoundary(matrix);
+    // 3. rotate this matrix
+    const len = Math.max(bottom - top, right - left) + 1;
+    const newMatrix = matrix
+        .filter((_, i) => {
+            return i >= top && i < len + top;
+        })
+        .map((row) => {
+            return row.filter((_, i) => {
+                return i >= left && i < len + left;
+            });
+        });
+    temp = rotateMatrix(newMatrix);
+    const x = top;
+    const y = left;
+    for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len; j++) {
+            matrix[i + x][j + y] = temp[i][j];
+        }
+    }
+    // 4. assign back
+    return matrix.map((row) => string2Binary(row.join("")));
 }

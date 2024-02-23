@@ -13,7 +13,6 @@ import {
     canMoveLeft,
     canMoveRight,
     moveDown,
-    moveLatest,
     moveLeft,
     moveRight,
     rotateBlock,

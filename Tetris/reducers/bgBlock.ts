@@ -15,7 +15,8 @@ export const bgBlockReducer = (state: number[], action: Action) => {
             return cleanRow(state);
         case MERGE_BLOCK:
             if (action.moveBlock) {
-                return mergeBlocks(state, action.moveBlock);
+                const mergedBlock = mergeBlocks(state, action.moveBlock);
+                return cleanRow(mergedBlock);
             }
             return state;
         default:
