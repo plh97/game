@@ -3,7 +3,6 @@ import { useInterval } from "usehooks-ts";
 import Block from "./components/Block";
 import {
     ADD_BLOCK,
-    CLEAN_ROW,
     DOWN,
     EMPTY_BLOCK,
     INITIAL_SCREEN,
@@ -47,7 +46,7 @@ function App() {
                 // 4. 不能移动，合并方块, 重新生成方块
                 bgBlockDispatch({ type: MERGE_BLOCK, moveBlock: _moveBlock });
                 moveBlockDispatch({ type: ADD_BLOCK });
-                if (hasRepeatBlock(moveBlock, bgBlock)) {
+                if (hasRepeatBlock(_moveBlock, bgBlock)) {
                     alert("游戏结束");
                     initGame();
                 }
