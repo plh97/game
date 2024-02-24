@@ -12,8 +12,6 @@ import {
     canMoveDown,
     canMoveLeft,
     canMoveRight,
-    // hasRepeatBlock,
-    // canRotateBlock,
     moveDown,
     moveLeft,
     moveRight,

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useLayoutEffect, useReducer, useState } from "react";
 import { useInterval } from "usehooks-ts";
 import Block from "./components/Block";
 import {
@@ -27,14 +27,22 @@ function App() {
     const [bgBlock, bgBlockDispatch] = useReducer(bgBlockReducer, [
         ...EMPTY_BLOCK,
     ]);
-    useEffect(() => {
-        initGame();
-    }, []);
     const initGame = () => {
         bgBlockDispatch({ type: INITIAL_SCREEN });
         moveBlockDispatch({ type: INITIAL_SCREEN });
         moveBlockDispatch({ type: ADD_BLOCK, bgBlock });
     };
+    useEffect(() => {
+        initGame();
+    }, []);
+    useLayoutEffect(() => {
+        if (hasRepeatBlock(moveBlock, bgBlock)) {
+            setTimeout(() => {
+                alert("游戏结束, 是否重新开始？");
+                initGame();
+            }, 0);
+        }
+    }, [bgBlock]);
     const combineDown = (_moveBlock = moveBlock) => {
         // 1. 判断是否有方块
         if (hasBlock(_moveBlock)) {
@@ -45,11 +53,7 @@ function App() {
             } else {
                 // 4. 不能移动，合并方块, 重新生成方块
                 bgBlockDispatch({ type: MERGE_BLOCK, moveBlock: _moveBlock });
-                moveBlockDispatch({ type: ADD_BLOCK });
-                if (hasRepeatBlock(_moveBlock, bgBlock)) {
-                    alert("游戏结束");
-                    initGame();
-                }
+                moveBlockDispatch({ type: ADD_BLOCK, bgBlock });
             }
         }
     };
