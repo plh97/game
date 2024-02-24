@@ -124,56 +124,11 @@ function string2Binary(str: string) {
 }
 
 export function rotateMatrix(matrix: number[][]) {
-    const len = matrix.length;
-    const temp: number[][] = [];
-    for (var i = 0; i < len; i++) {
-        for (var j = 0; j < len; j++) {
-            var k = len - 1 - j;
-            if (!temp[k]) {
-                temp[k] = [];
-            }
-            temp[k][i] = matrix[i][j];
-        }
-    }
-    return temp;
+    return matrix[0].map((val, index) =>
+        matrix.map((row) => row[index]).reverse()
+    );
 }
 
-export function canRotateBlock(blocks: number[], bgBlocks?: number[]) {
-    if (!bgBlocks) {
-        return false;
-    }
-    // 1. from '0000110000' to [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    const matrix = blocks.map((block) => binaryFmt(block).map(Number));
-    const bgMatrix = bgBlocks.map((block) => binaryFmt(block).map(Number));
-    let temp: number[][] = [];
-    // 2. get minimal square matrix
-    const { top, left, bottom, right } = getBoundary(matrix);
-    // 3. rotate this matrix
-    const len = Math.max(bottom - top, right - left) + 1;
-    const newMatrix = matrix
-        .filter((_, i) => {
-            return i >= top && i < len + top;
-        })
-        .map((row) => {
-            return row.filter((_, i) => {
-                return i >= left && i < len + left;
-            });
-        });
-    temp = rotateMatrix(newMatrix);
-    const x = top;
-    const y = left;
-    if (top + len > COL_LEN || left + len > ROW_LEN) {
-        return false;
-    }
-    for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-            if (bgMatrix[i + x][j + y] === 1 && temp[i][j] === 1) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
 export function rotateBlock(blocks: number[]) {
     // 1. from '0000110000' to [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     const matrix = blocks.map((block) => binaryFmt(block).map(Number));
@@ -182,18 +137,47 @@ export function rotateBlock(blocks: number[]) {
     const { top, left, bottom, right } = getBoundary(matrix);
     // 3. rotate this matrix
     const len = Math.max(bottom - top, right - left) + 1;
+    const direct = bottom - top > right - left;
+    let x = top;
+    let y = left;
+    if (len > 2) {
+        if (direct) {
+            // vertical, x should be fixed
+            y = Math.ceil((left + right) / 2 - len / 2) + 1;
+        } else {
+            // horizontal, y should be fixed
+            x = Math.ceil((top + bottom) / 2 - len / 2);
+        }
+        y = Math.min(y, ROW_LEN - len);
+        y = Math.max(y, 0);
+        x = Math.min(x, COL_LEN - len);
+        x = Math.max(x, 0);
+    }
     const newMatrix = matrix
         .filter((_, i) => {
-            return i >= top && i < len + top;
+            return i >= x && i < len + x;
         })
         .map((row) => {
             return row.filter((_, i) => {
-                return i >= left && i < len + left;
+                return i >= y && i < len + y;
             });
         });
     temp = rotateMatrix(newMatrix);
-    const x = top;
-    const y = left;
+    if (len > 2) {
+        if (direct) {
+            // vertical
+            if (x === 0) {
+                y = Math.ceil((left + right) / 2 - len / 2);
+            }
+        } else {
+            // horizontal, y should be fixed
+            x = Math.ceil((top + bottom) / 2 - len / 2) + 1;
+        }
+        y = Math.min(y, ROW_LEN - len);
+        y = Math.max(y, 0);
+        x = Math.min(x, COL_LEN - len);
+        x = Math.max(x, 0);
+    }
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len; j++) {
             matrix[i + x][j + y] = temp[i][j];

@@ -18,6 +18,7 @@ import { moveBlockReducer } from "./reducers/moveBlock";
 import { bgBlockReducer } from "./reducers/bgBlock";
 
 import "./styles.less";
+import { hasRepeatBlock } from "./utils/checkBlock";
 
 function App() {
     const [speed, setSpeed] = useState(1000);
@@ -27,15 +28,34 @@ function App() {
     const [bgBlock, bgBlockDispatch] = useReducer(bgBlockReducer, [
         ...EMPTY_BLOCK,
     ]);
+    useEffect(() => {
+        initGame();
+    }, []);
+    const initGame = () => {
+        bgBlockDispatch({ type: INITIAL_SCREEN });
+        moveBlockDispatch({ type: INITIAL_SCREEN });
+        moveBlockDispatch({ type: ADD_BLOCK, bgBlock });
+    };
+    const combineDown = (_moveBlock = moveBlock) => {
+        // 1. 判断是否有方块
+        if (hasBlock(_moveBlock)) {
+            // 2. 判断是否可以移动
+            if (canMoveDown(_moveBlock, bgBlock)) {
+                // 4. 下动方块
+                moveBlockDispatch({ type: DOWN, bgBlock });
+            } else {
+                // 4. 不能移动，合并方块, 重新生成方块
+                bgBlockDispatch({ type: MERGE_BLOCK, moveBlock: _moveBlock });
+                moveBlockDispatch({ type: ADD_BLOCK });
+                if (hasRepeatBlock(moveBlock, bgBlock)) {
+                    alert("游戏结束");
+                    initGame();
+                }
+            }
+        }
+    };
     useInterval(() => {
-        if (!canMoveDown(moveBlock, bgBlock)) {
-            bgBlockDispatch({ type: MERGE_BLOCK, moveBlock });
-        }
-        if (!hasBlock(moveBlock)) {
-            moveBlockDispatch({ type: ADD_BLOCK, bgBlock });
-        } else {
-            moveBlockDispatch({ type: DOWN, bgBlock });
-        }
+        combineDown();
     }, speed);
     useBindEvent({
         moveLeft: () => {
@@ -45,15 +65,11 @@ function App() {
             moveBlockDispatch({ type: MOVE_RIGHT, bgBlock });
         },
         moveDown: () => {
-            moveBlockDispatch({ type: DOWN, bgBlock });
-            if (!canMoveDown(moveBlock, bgBlock)) {
-                bgBlockDispatch({ type: MERGE_BLOCK, moveBlock });
-            }
+            combineDown();
         },
         moveDownImmediate: () => {
             const newMoveBlock = moveLatest(moveBlock, bgBlock);
-            moveBlockDispatch({ type: INITIAL_SCREEN });
-            bgBlockDispatch({ type: MERGE_BLOCK, moveBlock: newMoveBlock });
+            combineDown(newMoveBlock);
         },
         rotate: () => {
             moveBlockDispatch({ type: ROTATE, bgBlock });

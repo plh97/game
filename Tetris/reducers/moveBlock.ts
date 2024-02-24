@@ -12,12 +12,14 @@ import {
     canMoveDown,
     canMoveLeft,
     canMoveRight,
-    canRotateBlock,
+    // hasRepeatBlock,
+    // canRotateBlock,
     moveDown,
     moveLeft,
     moveRight,
     rotateBlock,
 } from "../utils";
+import { hasRepeatBlock } from "../utils/checkBlock";
 
 export interface BaseAction {
     readonly type: string;
@@ -30,17 +32,23 @@ export interface Action extends BaseAction {
 export const moveBlockReducer = (state: number[], action: Action) => {
     switch (action.type) {
         case INITIAL_SCREEN:
-            return addRandomBlock(EMPTY_BLOCK);
+            return [...EMPTY_BLOCK];
         case ROTATE:
-            if (canRotateBlock(state, action.bgBlock)) {
-                return rotateBlock(state);
+            try {
+                const res = rotateBlock(state);
+                if (!hasRepeatBlock(res, action.bgBlock)) {
+                    return res;
+                }
+                return state;
+            } catch (error) {
+                console.log(error);
+                return state;
             }
-            return state;
         case DOWN:
             if (canMoveDown(state, action?.bgBlock)) {
                 return moveDown(state);
             }
-            return addRandomBlock(EMPTY_BLOCK);
+            return [...EMPTY_BLOCK];
         case ADD_BLOCK:
             return addRandomBlock(EMPTY_BLOCK);
         case MOVE_LEFT:

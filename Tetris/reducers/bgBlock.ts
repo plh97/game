@@ -1,4 +1,9 @@
-import { CLEAN_ROW, MERGE_BLOCK } from "../constants";
+import {
+    CLEAN_ROW,
+    EMPTY_BLOCK,
+    INITIAL_SCREEN,
+    MERGE_BLOCK,
+} from "../constants";
 import { cleanRow, mergeBlocks } from "../utils";
 
 export interface BaseAction {
@@ -11,6 +16,8 @@ export interface Action extends BaseAction {
 
 export const bgBlockReducer = (state: number[], action: Action) => {
     switch (action.type) {
+        case INITIAL_SCREEN:
+            return [...EMPTY_BLOCK];
         case CLEAN_ROW:
             return cleanRow(state);
         case MERGE_BLOCK:
