@@ -9,6 +9,7 @@ export default defineConfig({
             input: {
                 index: "./index.html",
                 2048: "./2048/index.html",
+                "2048dom": "./2048dom/index.html",
                 BreakoutPC: "./BreakoutPC/index.html",
                 BreakoutMap: "./BreakoutPC/mapCreate.html",
                 Snake: "./Snake/index.html",
