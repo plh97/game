@@ -14,24 +14,9 @@ export enum NUM_ENUM {
     TWO_THOUSAND_AND_FORTY_EIGHTH = 2048,
 }
 
-export type GetNextFn = (x: number, y: number) => [number, number];
-
-export interface BaseAction {
-    readonly type: string;
-    readonly payload?: any;
-}
-
 export enum COLOR {
     BLACK = "#000",
     WHITE = "#fff",
     BACKGROUND = "#bbada0",
     TEXT_1 = "#776e65",
-}
-
-export interface IBlock {
-    id: any;
-    color?: string;
-    x: number;
-    y: number;
-    val: number;
 }

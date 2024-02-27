@@ -1,5 +1,3 @@
-export type NUM_TYPE = 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048;
-
 export enum NUM_ENUM {
     TWO = 2,
     FOUR = 4,
@@ -14,13 +12,6 @@ export enum NUM_ENUM {
     TWO_THOUSAND_AND_FORTY_EIGHTH = 2048,
 }
 
-export type GetNextFn = (x: number, y: number) => [number, number];
-
-export interface BaseAction {
-    readonly type: string;
-    readonly payload?: any;
-}
-
 export enum COLOR {
     BLACK = "#000",
     WHITE = "#fff",
@@ -28,10 +19,19 @@ export enum COLOR {
     TEXT_1 = "#776e65",
 }
 
-export interface IBlock {
-    id: any;
-    color?: string;
-    x: number;
-    y: number;
-    val: number;
-}
+export const INITIAL = "INITIAL";
+export const ADD = "ADD";
+export const MOVE = "MOVE";
+export const LEFT = "LEFT";
+export const RIGHT = "RIGHT";
+export const UP = "UP";
+export const DOWN = "DOWN";
+
+export const BLOCK_SIZE = 100;
+
+export const EMPTY_BLOCK = [
+    [0, 0, 0, 0],
+    [2, 2, 2, 2],
+    [8, 4, 2, 2],
+    [0, 0, 0, 2],
+];

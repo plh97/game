@@ -1,30 +1,27 @@
 import { useEventListener } from "usehooks-ts";
+import { DOWN, LEFT, RIGHT, UP } from "./constants";
 
 interface IProps {
-    moveLeft: () => void;
-    moveRight: () => void;
-    moveDown: () => void;
-    moveUp: () => void;
+    move: (dir: string) => void;
+    // moveLeft?: () => void;
+    // moveRight?: () => void;
+    // moveDown?: () => void;
+    // moveUp?: () => void;
 }
 
-export function useBindEvent({
-    moveLeft,
-    moveRight,
-    moveDown,
-    moveUp,
-}: IProps) {
+export function useBindEvent({ move }: IProps) {
     useEventListener("keydown", (e) => {
         if (e.code === "ArrowLeft") {
-            moveLeft();
+            move(LEFT);
         }
         if (e.code === "ArrowRight") {
-            moveRight();
+            move(RIGHT);
         }
         if (e.code === "ArrowUp") {
-            moveUp();
+            move(UP);
         }
         if (e.code === "ArrowDown") {
-            moveDown();
+            move(DOWN);
         }
     });
 }

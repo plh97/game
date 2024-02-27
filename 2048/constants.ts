@@ -24,6 +24,7 @@ export const ADD = "ADD";
 export const MOVE = "MOVE";
 export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
+export const MERGE = "MERGE";
 export const UP = "UP";
 export const DOWN = "DOWN";
 

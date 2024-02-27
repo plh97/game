@@ -1,20 +1,27 @@
 import React from "react";
-import Row from "./Row";
-import classNames from "classnames";
+import { BLOCK_SIZE } from "../constants";
+import { IBlock } from "../interface";
 
 interface IProps {
-    data: number[][];
-    className?: string;
+    data: IBlock[];
 }
 
-function Block({ data, className }: IProps) {
+export default function Block({ data }: IProps) {
     return (
-        <div className={classNames("container", className)}>
-            {data.map((row, i) => (
-                <Row key={i} data={row} y={i} />
+        <div className="container">
+            {data.map(({ x, y, val, id }, i) => (
+                <div
+                    className="block"
+                    key={id}
+                    data-info={`val-${x}-${y}`}
+                    style={{
+                        left: x * BLOCK_SIZE,
+                        top: y * BLOCK_SIZE,
+                    }}
+                >
+                    {val ? val : ""}
+                </div>
             ))}
         </div>
     );
 }
-
-export default Block;
