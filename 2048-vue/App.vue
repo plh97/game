@@ -26,10 +26,10 @@
             </div>
             <div class="container">
                 <span class="list" v-for="(e, i) in rocks" :key="i" :style="`
-              zIndex: ${e ? e.num : 0};
-                                                                                                                                              transform: translate(${cssTransition(e)});
-                                                                                                                                              display: ${e ? '' : 'none'}
-            `">
+                    zIndex: ${e ? e.num : 0};
+                    transform: translate(${cssTransition(e)});
+                    display: ${e ? '' : 'none'}
+                `">
                     <span class="inner" :id="`r${e && e.id}`" :style="`backgroundColor: ${e ? e.color : ''}`">
                         {{ e ? e.num : '' }}
                     </span>

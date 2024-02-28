@@ -20,6 +20,7 @@ export enum COLOR {
 }
 
 export const INITIAL = "INITIAL";
+export const CLEAN_STYLE = "CLEAN_STYLE";
 export const ADD = "ADD";
 export const MOVE = "MOVE";
 export const LEFT = "LEFT";

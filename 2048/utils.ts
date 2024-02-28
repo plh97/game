@@ -2,15 +2,15 @@ import { cloneDeep } from "lodash";
 import { DOWN, LEFT, RIGHT, UP } from "./constants";
 import { GetNextFn, IBlock } from "./interface";
 
-function inRange(x: number, y: number) {
+export function inRange(x: number, y: number) {
     return x >= 0 && x < 4 && y >= 0 && y < 4;
 }
 
-function getBlockFromBlockList(matrix: IBlock[], x: number, y: number) {
+export function getBlockFromBlockList(matrix: IBlock[], x: number, y: number) {
     return matrix.find((item) => item.x === x && item.y === y);
 }
 
-function getNextUnZeroValue(
+export function getNextUnZeroValue(
     matrix: IBlock[],
     x: number,
     y: number,
@@ -49,8 +49,10 @@ export function calcPointMerge(
         if (currBlock.val === nextBlock.val) {
             nextBlock.x = currBlock.x;
             nextBlock.y = currBlock.y;
-            // nextBlock.val *= 2;
-            // matrix = matrix.filter((item) => item !== currBlock);
+            nextBlock.val *= 2;
+            nextBlock.color = colorMap[nextBlock.val];
+            nextBlock.className = "pop";
+            matrix = matrix.filter((item) => item !== currBlock);
         }
     }
     return matrix;
@@ -104,6 +106,16 @@ export const isFull = (blocks: IBlock[]) => {
     return blocks.filter((e) => e).length > 15;
 };
 
+export function getRepeatBlock(blocks: IBlock[]) {
+    const arr = blocks.map((e) => JSON.stringify(e));
+    for (let i = 0; i < blocks.length; i++) {
+        if (arr.lastIndexOf(arr[i]) !== i) {
+            return true;
+        }
+    }
+    return false;
+}
+
 const colorMap: Record<number, string> = {
     2: "#eee4da",
     4: "#ede0c8",
@@ -126,6 +138,7 @@ const num = (blocks: IBlock[]) => {
         val: num,
         id: Math.random(),
         color: colorMap[num],
+        className: "appear",
     };
     const _isExist = isExist(blocks, {
         x: result.x,
@@ -135,10 +148,15 @@ const num = (blocks: IBlock[]) => {
     return result;
 };
 
-export const add = (blocks: IBlock[]): IBlock => {
+export const add = (blocks: IBlock[]): IBlock | undefined => {
+    if (isFull(blocks)) {
+        return;
+    }
     const a = num(blocks);
     if (a) {
         return a;
     }
     return add(blocks);
 };
+
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

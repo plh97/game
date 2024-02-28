@@ -29,9 +29,10 @@ export enum COLOR {
 }
 
 export interface IBlock {
-    id: any;
+    id: number;
     color?: string;
     x: number;
     y: number;
     val: number;
+    className?: string;
 }

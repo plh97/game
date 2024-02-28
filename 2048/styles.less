@@ -4,6 +4,54 @@ body {
     overscroll-behavior: none;
 }
 
+@keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+.pop > span {
+    animation: pop 0.2s ease 100ms !important;
+    // animation-fill-mode: backwards !important;
+}
+
+.appear > span {
+    animation: appear 0.2s ease 100ms !important;
+    animation-fill-mode: backwards !important;
+}
+
+@keyframes pop {
+    0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        transform: scale(0);
+    }
+    50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        -ms-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+    100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
 .page {
     padding-top: 10vh;
     scroll-behavior: smooth;
@@ -23,7 +71,11 @@ body {
             align-items: center;
             justify-content: center;
             // border: 1px solid red;
-            transition: all 0.1s ease-in;
+            transition: 100ms ease-in-out;
+            span {
+                // animation: 0.2s ease 100ms;
+                // animation-fill-mode: backwards;
+            }
         }
     }
 }

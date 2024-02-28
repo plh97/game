@@ -1,6 +1,7 @@
 import React from "react";
 import { BLOCK_SIZE } from "../constants";
 import { IBlock } from "../interface";
+import classNames from "classnames";
 
 interface IProps {
     data: IBlock[];
@@ -9,17 +10,23 @@ interface IProps {
 export default function Block({ data }: IProps) {
     return (
         <div className="container">
-            {data.map(({ x, y, val, id }, i) => (
+            {data.map(({ x, y, val, id, className, color }) => (
                 <div
-                    className="block"
+                    className={classNames('block', className)}
                     key={id}
                     data-info={`val-${x}-${y}`}
                     style={{
-                        left: x * BLOCK_SIZE,
-                        top: y * BLOCK_SIZE,
+                        transform: `translate(${x * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px)`
                     }}
                 >
-                    {val ? val : ""}
+                    <span
+                        // className={classNames('', className)}
+                        style={{
+                            color
+                        }}
+                    >
+                        {val ? val : ""}
+                    </span>
                 </div>
             ))}
         </div>
