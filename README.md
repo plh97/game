@@ -1,4 +1,4 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/b4b932bb-b688-4dce-a37e-1e25c0c1b243/deploy-status)](https://app.netlify.com/sites/lively-buttercream-5ddce4/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2868b301-01ea-4e48-957b-6221b35dd9bf/deploy-status)](https://app.netlify.com/sites/venerable-paprenjak-4289e2/deploys)
 
 # h5 game
 
