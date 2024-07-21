@@ -1,0 +1,54 @@
+stages:
+  - build
+  - pre-publish
+  - publish
+variables:
+  GITLAB_TOKEN: $GITLAB_TOKEN
+  NPM_TOKEN: $NPM_TOKEN
+
+before_script:
+  - npm install
+  - git config --global user.name "assets.system"
+  - git config --global user.email "assets.system@okcoin.com"
+publish:
+  stage: publish
+  only:
+    - master
+  except:
+    - tags
+    - triggers
+  when: manual
+  script:
+    - echo "Checking current Git user...!"
+    - git config --get user.name
+    - echo "Checking current Git email..."
+    - git config --get user.email
+    - echo "Manually triggered publish for master branch..."
+    - git remote set-url origin "https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.okg.com/okfe/im.git"
+    - git checkout $CI_COMMIT_REF_NAME
+    - git pull origin $CI_COMMIT_REF_NAME
+    - npm run release --ci --token ${GITLAB_TOKEN}
+  tags:
+    - nodejs18
+
+docs-publish:
+  stage: publish
+  only:
+    - /^dev\/\d+\.\d+.\d+$/
+  except:
+    - tags
+    - triggers
+  when: manual
+  script:
+    - nvm use v20.11.0
+    - echo "Checking current Git user...!"
+    - git config --get user.name
+    - echo "Checking current Git email..."
+    - git config --get user.email
+    - echo "Manually triggered docs publish for dev branch..."
+    - git remote set-url origin "https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.okg.com/okfe/im.git"
+    - git checkout $CI_COMMIT_REF_NAME
+    - git pull origin $CI_COMMIT_REF_NAME
+    - cd packages/docs && pnpm run build && pnpm run upload
+  tags:
+    - nodejs18
