@@ -3,10 +3,6 @@ import { DOWN, LEFT, RIGHT, UP } from "./constants";
 
 interface IProps {
     move: (dir: string) => void;
-    // moveLeft?: () => void;
-    // moveRight?: () => void;
-    // moveDown?: () => void;
-    // moveUp?: () => void;
 }
 
 export function useBindEvent({ move }: IProps) {

@@ -219,7 +219,6 @@ class Ball {
                     Math.pow(closestPointY - ball.y, 2)
             );
             if (distance <= ball.size) {
-                // console.log(distance, ball.size);
                 // 1. reset ball position
                 // 2. turn around the ball position
                 // direct angle
