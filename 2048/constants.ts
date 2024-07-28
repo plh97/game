@@ -28,6 +28,9 @@ export const RIGHT = "RIGHT";
 export const MERGE = "MERGE";
 export const UP = "UP";
 export const DOWN = "DOWN";
+export const UNDO = "UNDO";
+export const REDO = "REDO";
+export const SET_RECORD = "SET_RECORD";
 
 export const BLOCK_SIZE = 100;
 

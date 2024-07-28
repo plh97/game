@@ -69,7 +69,7 @@ export function move(
     while (inRange(x, y)) {
         // should handle 2 times, first move and second merge in case
         matrix = calcPointMerge(matrix, x, y, getNext);
-        matrix = calcPointMerge(matrix, x, y, getNext);
+        // matrix = calcPointMerge(matrix, x, y, getNext);
         [x, y] = getNext(x, y);
     }
     return matrix;

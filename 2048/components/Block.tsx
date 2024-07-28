@@ -14,6 +14,7 @@ export default function Block({ data }: IProps) {
                 <div
                     className={classNames('block', className)}
                     key={id}
+                    data-id={id}
                     data-info={`val-${x}-${y}`}
                     style={{
                         transform: `translate(${x * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px)`
