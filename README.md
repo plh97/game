@@ -7,7 +7,7 @@
 
 ![image](./1.gif)
 
-1. open [Map Edit](https://lively-buttercream-5ddce4.netlify.app/breakoutpc/mapCreate.html)
+1. open [Map Edit](https://game.plhh.org/BreakoutPC/mapCreate.html)
 
 2. click clean map to remove default map data
 
@@ -19,4 +19,4 @@
 
 6. click **store map** button, to store current map data in local storage
 
-7. open [PC Play](https://lively-buttercream-5ddce4.netlify.app/breakoutpc/index.html), to play the game with the map which create by you just now.
+7. open [PC Play](https://game.plhh.org/BreakoutPC/index.html), to play the game with the map which create by you just now.
